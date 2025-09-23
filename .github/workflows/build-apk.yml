@@ -1,0 +1,36 @@
+name: Secure Tailscale Build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: production  # 使用环境保护
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Android
+      uses: android-actions/setup-android@v3
+
+    - name: Customize Application
+      run: |
+        sed -i "s|login.tailscale.com|${{ secrets.LOGIN_SERVER }}|g" app/src/main/java/com/tailscale/ipn/IPNConsts.java
+        sed -i "s|com.tailscale.ipn|${{ secrets.APP_ID }}|g" app/build.gradle
+
+    - name: Build Release APK
+      run: |
+        ./gradlew assembleRelease
+        # 生成 SHA256 校验和
+        sha256sum app/build/outputs/apk/release/*.apk > checksum.txt
+
+    - name: Upload to Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          app/build/outputs/apk/release/*.apk
+          checksum.txt
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
