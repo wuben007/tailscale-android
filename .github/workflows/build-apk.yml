@@ -17,8 +17,8 @@ jobs:
 
     - name: Customize Application
       run: |
-        sed -i "s|login.tailscale.com|${{ secrets.LOGIN_SERVER }}|g" app/src/main/java/com/tailscale/ipn/IPNConsts.java
-        sed -i "s|com.tailscale.ipn|${{ secrets.APP_ID }}|g" app/build.gradle
+        sed -i "s|login.tailscale.com|${{ secrets.LOGIN_SERVER }}|g" android/src/main/java/com/tailscale/ipn/IPNConsts.java
+        sed -i "s|com.tailscale.ipn|${{ secrets.APP_ID }}|g" android/build.gradle
 
     - name: Build Release APK
       run: |
