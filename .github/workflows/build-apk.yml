@@ -23,7 +23,7 @@ jobs:
     - name: Build Release APK
       run: |
         ./gradlew assembleRelease
-        # 生成 SHA256 校验和
+        # 生成 SHA256 校验和apk
         sha256sum app/build/outputs/apk/release/*.apk > checksum.txt
 
     - name: Upload to Release
